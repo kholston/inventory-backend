@@ -4,9 +4,30 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "babel-node": "babel-node --presets='@babel/preset-env' ",
+    "dev": "cross-env NODE_ENV=development nodemon --exec npm run babel-node -- src/index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand"
   },
   "keywords": [],
   "author": "Ken Holston",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "eslint-plugin-prettier": "^3.4.1",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "jest": "^27.1.0",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.3.2",
+    "supertest": "^6.1.6"
+  }
 }
