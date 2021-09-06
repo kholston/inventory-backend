@@ -1,3 +1,5 @@
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 import http from 'http'
 import logger from './utils/logger'
 import config from './utils/config'
