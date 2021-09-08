@@ -3,8 +3,8 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const ManufacturerSchema = new Schema({
-  name: { type: String, required: true, min: 3 },
-  description: { type: String, required: true, minlength: 3 },
+  name: { type: String, required: true, minLength: 3 },
+  description: { type: String, required: true, minLength: 3 },
 })
 
 ManufacturerSchema.set('toJSON', {

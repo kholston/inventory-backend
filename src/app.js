@@ -8,6 +8,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import mongoose from 'mongoose'
 import categoryRouter from './controllers/category'
+import manufacturerRouter from './controllers/manufacturer'
 import logger from './utils/logger'
 import middleware from './utils/middleware'
 
@@ -34,6 +35,7 @@ app.use(express.json())
 app.use(morgan('tiny'))
 
 app.use('/api/categories', categoryRouter)
+app.use('/api/manufacturers', manufacturerRouter)
 
 if (process.env.NODE_ENV === 'test') {
   import('./controllers/testing').then((testingRouter) => {

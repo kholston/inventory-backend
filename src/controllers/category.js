@@ -32,7 +32,7 @@ categoryRouter.get('/:id', async (request, response) => {
   if (category) {
     response.json(category)
   } else {
-    return response.status(404).send('category does not exist')
+    response.status(404).send('category not found')
   }
 })
 categoryRouter.delete('/:id', async (request, response) => {

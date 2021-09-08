@@ -8,10 +8,10 @@ const api = supertest(app)
 
 beforeEach(async () => {
   await Manufacturer.deleteMany({})
-  await Manufacturer.insertMany(helper.intitialManufacturers)
+  await Manufacturer.insertMany(helper.initialManufacturers)
 })
 
-describe.only('Manufacturer', () => {
+describe('Manufacturer', () => {
   describe('when there are initially some manufacturers saved', () => {
     test('manufacturers are returned as json', async () => {
       await api
@@ -35,7 +35,7 @@ describe.only('Manufacturer', () => {
     test('succeeds with a valid id', async () => {
       const manufacturersAtStart = await helper.manufacturersInDb()
       const manufacturerToView = manufacturersAtStart[0]
-      const response = api
+      const response = await api
         .get(`/api/manufacturers/${manufacturerToView.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -46,7 +46,7 @@ describe.only('Manufacturer', () => {
       expect(response.body).toEqual(processedManufacturer)
     })
     test('fails with status code 404 if manufacturer does not exist', async () => {
-      const validNonExistingId = helper.nonExistingId()
+      const validNonExistingId = await helper.nonExistingId()
 
       await api.get(`/api/manufacturers/${validNonExistingId}`).expect(404)
     })
@@ -96,7 +96,7 @@ describe.only('Manufacturer', () => {
         .delete(`/api/manufacturers/${manufacturerToDelete.id}`)
         .expect(204)
 
-      const manufacturersAtEnd = helper.manufacturersInDb()
+      const manufacturersAtEnd = await helper.manufacturersInDb()
       expect(manufacturersAtEnd).toHaveLength(
         helper.initialManufacturers.length - 1
       )
