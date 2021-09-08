@@ -1,8 +1,9 @@
+import 'regenerator-runtime/runtime'
 import Category from '../models/category'
 import Item from '../models/item'
 import ItemInstance from '../models/itemInstance'
 import Manufacturer from '../models/manufacturer'
-import User from '../models/manufacturer'
+import User from '../models/user'
 
 const intitialCategories = [
   {

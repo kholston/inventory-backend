@@ -37,13 +37,13 @@ describe('Category', () => {
     test('succeeds with a valid id', async () => {
       const categoriesAtStart = await helper.categoriesInDb()
       const categoryToView = categoriesAtStart[0]
-      const resultCategory = await api
+      const response = await api
         .get(`/api/categories/${categoryToView.id}`)
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
       const processedCategoryToView = JSON.parse(JSON.stringify(categoryToView))
-      expect(resultCategory.body).toEqual(processedCategoryToView)
+      expect(response.body).toEqual(processedCategoryToView)
     })
 
     test('fails with status code 404 if category does not exist', async () => {
@@ -85,7 +85,7 @@ describe('Category', () => {
   })
 
   describe('deletion of note', () => {
-    test.only('a category can be deleted', async () => {
+    test('a category can be deleted', async () => {
       const categoriesAtStart = await helper.categoriesInDb()
       const categoryToDelete = categoriesAtStart[0]
 
@@ -97,6 +97,8 @@ describe('Category', () => {
       const categories = categoriesAtEnd.map((c) => c.name)
       expect(categories).not.toContain(categoryToDelete.name)
     })
+
+    test.todo('fails with status code 400 if category is still in use')
   })
 })
 

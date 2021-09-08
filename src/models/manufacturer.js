@@ -7,4 +7,12 @@ const ManufacturerSchema = new Schema({
   description: { type: String, required: true, minlength: 3 },
 })
 
+ManufacturerSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  },
+})
+
 export default mongoose.model('Manufacturer', ManufacturerSchema)
