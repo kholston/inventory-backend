@@ -93,14 +93,31 @@ const initialItems = [
     price: '549.99',
     number_in_stock: 1,
   },
-  {
-    name: 'SM57 Cardioid Dynamic Microphone',
-    description:
-      'An industry standard microphone for live sound or studio recording',
-    price: '99.99',
-    number_in_stock: 0,
-  },
 ]
+
+const initialItemsWithAllFields = (manufacturers, categories) => {
+  const itemsWithAllFields = initialItems
+
+  itemsWithAllFields[0].category = [categories[0].id]
+  itemsWithAllFields[0].manufacturer = manufacturers[0].id
+
+  itemsWithAllFields[1].category = [categories[0].id]
+  itemsWithAllFields[1].manufacturer = manufacturers[0].id
+
+  itemsWithAllFields[2].category = [categories[1].id]
+  itemsWithAllFields[2].manufacturer = manufacturers[1].id
+
+  itemsWithAllFields[3].category = [categories[3].id]
+  itemsWithAllFields[3].manufacturer = manufacturers[2].id
+
+  itemsWithAllFields[4].category = [categories[1].id]
+  itemsWithAllFields[4].manufacturer = manufacturers[3].id
+
+  itemsWithAllFields[5].category = [categories[3].id]
+  itemsWithAllFields[5].manufacturer = manufacturers[3].id
+
+  return itemsWithAllFields
+}
 
 const initialItemInstances = [
   {
@@ -150,6 +167,8 @@ const categoriesInDb = async () => {
 
 const itemsInDb = async () => {
   const items = await Item.find({})
+    .populate('category', { name: 1, description: 1 })
+    .populate('manufacturer', { name: 1, description: 1 })
   return items.map((i) => i.toJSON())
 }
 
@@ -170,6 +189,7 @@ const nonExistingId = async () => {
 
 export default {
   initialItems,
+  initialItemsWithAllFields,
   initialItemInstances,
   initialManufacturers,
   intitialCategories,

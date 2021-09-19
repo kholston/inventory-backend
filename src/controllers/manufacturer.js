@@ -72,8 +72,8 @@ manufacturerRouter.put('/:id', async (request, response) => {
 })
 manufacturerRouter.delete('/:id', async (request, response) => {
   const itemCheck = await Item.find({ manufacturer: request.params.id })
-  if (itemCheck.isLength > 0) {
-    response.status(400).json({
+  if (itemCheck.length > 0) {
+    return response.status(400).json({
       error: 'remove manufacturer from items before deletion',
       items: itemCheck,
     })
