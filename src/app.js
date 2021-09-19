@@ -11,6 +11,7 @@ import categoryRouter from './controllers/category'
 import manufacturerRouter from './controllers/manufacturer'
 import logger from './utils/logger'
 import middleware from './utils/middleware'
+import itemRouter from './controllers/item'
 
 const app = express()
 
@@ -36,6 +37,7 @@ app.use(morgan('tiny'))
 
 app.use('/api/categories', categoryRouter)
 app.use('/api/manufacturers', manufacturerRouter)
+app.use('/api/items', itemRouter)
 
 if (process.env.NODE_ENV === 'test') {
   import('./controllers/testing').then((testingRouter) => {
