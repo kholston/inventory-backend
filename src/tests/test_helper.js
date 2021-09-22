@@ -150,10 +150,23 @@ const initialItemInstances = [
   {
     serial_number: 'TDS528',
   },
-  {
-    serial_number: 'POIU96325745',
-  },
 ]
+const instancesWithItems = (items) => {
+  const completeInstances = initialItemInstances
+
+  completeInstances[0].item = items[0].id
+  completeInstances[1].item = items[0].id
+  completeInstances[2].item = items[1].id
+  completeInstances[3].item = items[1].id
+  completeInstances[4].item = items[1].id
+  completeInstances[5].item = items[2].id
+  completeInstances[6].item = items[2].id
+  completeInstances[7].item = items[3].id
+  completeInstances[8].item = items[4].id
+  completeInstances[9].item = items[4].id
+
+  return completeInstances
+}
 
 const manufacturersInDb = async () => {
   const manufacturers = await Manufacturer.find({})
@@ -191,6 +204,7 @@ export default {
   initialItems,
   initialItemsWithAllFields,
   initialItemInstances,
+  instancesWithItems,
   initialManufacturers,
   intitialCategories,
   categoriesInDb,
