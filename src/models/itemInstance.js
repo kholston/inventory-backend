@@ -11,4 +11,11 @@ const ItemInstanceSchema = new Schema({
   serial_number: { type: String, required: true },
 })
 
+ItemInstanceSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  },
+})
 export default mongoose.model('ItemInstance', ItemInstanceSchema)

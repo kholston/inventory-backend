@@ -63,11 +63,11 @@ describe('Item Instance', () => {
     test('success with valid data', async () => {
       const items = await helper.itemsInDb()
       const newInstance = {
-        item: items[4],
+        item: items[4].id,
         serial_number: 'POIU96325745',
       }
       await api
-        .post('/api/iteminstaces')
+        .post('/api/iteminstances')
         .send(newInstance)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -102,9 +102,8 @@ describe('Item Instance', () => {
       const instances = instancesAtEnd.map((i) => i.serial_number)
       expect(instances).not.toContain(instanceToDelete.serial_number)
     })
-    test.todo('fails with status code 400 if item instance is still in use')
     test('fails with status code 404 if item instance does not exist', async () => {
-      const validNonExistingId = helper.nonExistingId()
+      const validNonExistingId = await helper.nonExistingId()
 
       await api.delete(`/api/iteminstances/${validNonExistingId}`).expect(404)
       const instancesAtEnd = await helper.itemInstancesInDb()

@@ -186,7 +186,10 @@ const itemsInDb = async () => {
 }
 
 const itemInstancesInDb = async () => {
-  const itemInstances = await ItemInstance.find({})
+  const itemInstances = await ItemInstance.find({}).populate({
+    path: 'item',
+    populate: { path: 'manufacturer category' },
+  })
   return itemInstances.map((i) => i.toJSON())
 }
 
