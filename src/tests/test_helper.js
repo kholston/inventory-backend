@@ -3,7 +3,7 @@ import Category from '../models/category'
 import Item from '../models/item'
 import ItemInstance from '../models/itemInstance'
 import Manufacturer from '../models/manufacturer'
-// import User from '../models/user'
+import User from '../models/user'
 
 const intitialCategories = [
   {
@@ -203,6 +203,11 @@ const nonExistingId = async () => {
   return category._id.toString()
 }
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map((u) => u.toJSON())
+}
+
 export default {
   initialItems,
   initialItemsWithAllFields,
@@ -214,5 +219,6 @@ export default {
   itemsInDb,
   itemInstancesInDb,
   manufacturersInDb,
+  usersInDb,
   nonExistingId,
 }
