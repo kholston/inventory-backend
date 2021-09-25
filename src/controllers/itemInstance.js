@@ -4,14 +4,14 @@ import ItemInstance from '../models/itemInstance'
 
 const instanceRouter = express.Router()
 
-const sanitizeInput = () => {
-  body('item').exists().withMessage('Item required').trim().escape()
+const sanitizeInput = [
+  body('item').exists().withMessage('Item required').trim().escape(),
   body('serial_number')
     .notEmpty()
     .withMessage('Serial Number required')
     .trim()
-    .escape()
-}
+    .escape(),
+]
 
 instanceRouter.get('/', async (request, response) => {
   const instances = await ItemInstance.find({}).populate({
@@ -33,8 +33,7 @@ instanceRouter.get('/:id', async (request, response) => {
   }
 })
 
-instanceRouter.post('/', async (request, response) => {
-  sanitizeInput()
+instanceRouter.post('/', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
     response.status(400).json({ errors })
@@ -46,8 +45,7 @@ instanceRouter.post('/', async (request, response) => {
     response.json(savedInstance)
   }
 })
-instanceRouter.put('/:id', async (request, response) => {
-  sanitizeInput()
+instanceRouter.put('/:id', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
     response.status(400).json(errors)

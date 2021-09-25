@@ -7,34 +7,34 @@ import ItemInstance from '../models/itemInstance'
 
 const itemRouter = express.Router()
 
-const sanitizeInput = () => {
+const sanitizeInput = [
   body('name')
     .notEmpty()
     .withMessage('Item name required')
     .trim()
     .isLength({ min: 3 })
     .withMessage('Item name must be at least 3 characters')
-    .escape()
+    .escape(),
   body('description')
     .notEmpty()
     .withMessage('Item description required')
     .trim()
     .isLength({ min: 3 })
     .withMessage('Item description must be at least 3 characters')
-    .escape()
-  body('category').notEmpty().withMessage('Item Category required').escape()
+    .escape(),
+  body('category').notEmpty().withMessage('Item Category required').escape(),
   body('price')
     .default(0)
     .notEmpty()
     .withMessage('Item price required')
-    .escape()
+    .escape(),
   body('number_in_stock')
     .notEmpty()
     .trim()
     .isInt({ min: 0 })
-    .withMessage('Item stock must be greater than zero')
-  body('manufacturer').notEmpty().escape()
-}
+    .withMessage('Item stock must be greater than zero'),
+  body('manufacturer').notEmpty().escape(),
+]
 
 itemRouter.get('/', async (request, response) => {
   const items = await Item.find({})
@@ -60,8 +60,7 @@ itemRouter.get('/:id', async (request, response) => {
   }
 })
 
-itemRouter.post('/', async (request, response) => {
-  sanitizeInput()
+itemRouter.post('/', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
     response.status(400).json(errors)

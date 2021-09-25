@@ -5,22 +5,22 @@ import Category from '../models/category'
 
 const categoryRouter = express.Router()
 
-const sanitizeInput = () => {
+const sanitizeInput = [
   body('name')
     .notEmpty()
     .withMessage('Category name required')
     .trim()
     .isLength({ min: 3 })
     .withMessage('Category name length must be at least 3 characters')
-    .escape()
+    .escape(),
   body('description')
     .notEmpty()
     .withMessage('Category description required')
     .trim()
     .isLength({ min: 3 })
     .withMessage('Category description length must be at least 3 characters')
-    .escape()
-}
+    .escape(),
+]
 
 categoryRouter.get('/', async (request, response) => {
   const categories = await Category.find({})
@@ -48,8 +48,7 @@ categoryRouter.delete('/:id', async (request, response) => {
   await Category.findByIdAndDelete(request.params.id)
   response.status(204).end()
 })
-categoryRouter.put('/:id', async (request, response) => {
-  sanitizeInput()
+categoryRouter.put('/:id', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -68,8 +67,7 @@ categoryRouter.put('/:id', async (request, response) => {
 
   response.json(updatedCategory)
 })
-categoryRouter.post('/', async (request, response) => {
-  sanitizeInput()
+categoryRouter.post('/', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {

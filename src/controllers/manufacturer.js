@@ -5,14 +5,14 @@ import Item from '../models/item'
 
 const manufacturerRouter = express.Router()
 
-const sanitizeInput = () => {
+const sanitizeInput = [
   body('name')
     .notEmpty()
     .withMessage('Manufacturer name required')
     .trim()
     .isLength({ min: 3 })
     .withMessage('Manufacturer name length must be at least 3 characters')
-    .escape()
+    .escape(),
   body('description')
     .notEmpty()
     .withMessage('Manufacturer description required')
@@ -21,8 +21,8 @@ const sanitizeInput = () => {
     .withMessage(
       'Manufacturer description length must be at least 3 characters'
     )
-    .escape()
-}
+    .escape(),
+]
 
 manufacturerRouter.get('/', async (request, response) => {
   const manufacturers = await Manufacturer.find({})
@@ -36,8 +36,7 @@ manufacturerRouter.get('/:id', async (request, response) => {
     response.status(404).send('manufacturer not found')
   }
 })
-manufacturerRouter.post('/', async (request, response) => {
-  sanitizeInput()
+manufacturerRouter.post('/', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
@@ -51,7 +50,7 @@ manufacturerRouter.post('/', async (request, response) => {
   const savedManufacturer = await manufacturer.save()
   response.json(savedManufacturer)
 })
-manufacturerRouter.put('/:id', async (request, response) => {
+manufacturerRouter.put('/:id', sanitizeInput, async (request, response) => {
   sanitizeInput()
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
