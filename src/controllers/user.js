@@ -24,11 +24,11 @@ const sanitizeInput = [
 ]
 
 userRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  const users = await User.find({}).exec()
   response.json(users)
 })
 userRouter.get('/:id', async (request, response) => {
-  const user = await User.findById(request.params.id)
+  const user = await User.findById(request.params.id).exec()
   response.json(user)
 })
 userRouter.post('/', sanitizeInput, async (request, response) => {

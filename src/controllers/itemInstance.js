@@ -14,20 +14,24 @@ const sanitizeInput = [
 ]
 
 instanceRouter.get('/', async (request, response) => {
-  const instances = await ItemInstance.find({}).populate({
-    path: 'item',
-    populate: { path: 'manufacturer category' },
-  })
+  const instances = await ItemInstance.find({})
+    .populate({
+      path: 'item',
+      populate: { path: 'manufacturer category' },
+    })
+    .exec()
   response.json(instances)
 })
 
 instanceRouter.get('/:id', async (request, response) => {
-  const instance = await ItemInstance.findById(request.params.id).populate({
-    path: 'item',
-    populate: { path: 'manufacturer category' },
-  })
+  const instance = await ItemInstance.findById(request.params.id)
+    .populate({
+      path: 'item',
+      populate: { path: 'manufacturer category' },
+    })
+    .exec()
   if (instance) {
-    response.json(instance)
+    return response.json(instance)
   } else {
     response.status(404).send('item instance not found')
   }
@@ -36,7 +40,7 @@ instanceRouter.get('/:id', async (request, response) => {
 instanceRouter.post('/', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
-    response.status(400).json({ errors })
+    return response.status(400).json({ errors })
   } else {
     const newInstance = new ItemInstance({
       ...request.body,
@@ -48,7 +52,7 @@ instanceRouter.post('/', sanitizeInput, async (request, response) => {
 instanceRouter.put('/:id', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
-    response.status(400).json(errors)
+    return response.status(400).json(errors)
   } else {
     const instance = new ItemInstance({
       ...request.body,
@@ -58,13 +62,13 @@ instanceRouter.put('/:id', sanitizeInput, async (request, response) => {
       request.params.id,
       instance,
       { new: true }
-    )
+    ).exec()
 
     response.json(updatedInstance)
   }
 })
 instanceRouter.delete('/:id', async (request, response) => {
-  const instance = await ItemInstance.findById(request.params.id)
+  const instance = await ItemInstance.findById(request.params.id).exec()
   if (instance) {
     await ItemInstance.findByIdAndDelete(request.params.id)
     response.status(204).end()

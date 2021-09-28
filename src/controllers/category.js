@@ -23,23 +23,23 @@ const sanitizeInput = [
 ]
 
 categoryRouter.get('/', async (request, response) => {
-  const categories = await Category.find({})
+  const categories = await Category.find({}).exec()
   response.json(categories)
 })
 
 categoryRouter.get('/:id', async (request, response) => {
-  const category = await Category.findById(request.params.id)
+  const category = await Category.findById(request.params.id).exec()
   if (category) {
-    response.json(category)
+    return response.json(category)
   } else {
-    response.status(404).send('category not found')
+    return response.status(404).send('category not found')
   }
 })
 categoryRouter.delete('/:id', async (request, response) => {
   // prevent categories from being deleted before removal from item
-  const itemCheck = await Item.find({ category: request.params.id })
+  const itemCheck = await Item.find({ category: request.params.id }).exec()
   if (itemCheck.length > 0) {
-    response.status(400).json({
+    return response.status(400).json({
       error: 'remove category from items before deletion',
       items: itemCheck,
     })
@@ -52,7 +52,7 @@ categoryRouter.put('/:id', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
-    response.status(400).json(errors)
+    return response.status(400).json(errors)
   }
 
   const category = {
@@ -63,15 +63,15 @@ categoryRouter.put('/:id', sanitizeInput, async (request, response) => {
     request.params.id,
     category,
     { new: true }
-  )
+  ).exec()
 
-  response.json(updatedCategory)
+  return response.json(updatedCategory)
 })
 categoryRouter.post('/', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
 
   if (!errors.isEmpty()) {
-    response.status(400).json(errors)
+    return response.status(400).json(errors)
   }
 
   const category = new Category({

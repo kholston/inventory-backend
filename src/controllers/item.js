@@ -46,6 +46,7 @@ itemRouter.get('/', async (request, response) => {
       name: 1,
       description: 1,
     })
+    .exec()
   response.json(items)
 })
 
@@ -53,17 +54,18 @@ itemRouter.get('/:id', async (request, response) => {
   const item = await Item.findById(request.params.id)
     .populate('category', { name: 1, description: 1 })
     .populate('manufacturer', { name: 1, description: 1 })
+    .exec()
   if (item) {
-    response.json(item)
+    return response.json(item)
   } else {
-    response.status(404).send('item not found')
+    return response.status(404).send('item not found')
   }
 })
 
 itemRouter.post('/', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
-    response.status(400).json(errors)
+    return response.status(400).json(errors)
   } else {
     const item = new Item({
       ...request.body,
@@ -74,7 +76,9 @@ itemRouter.post('/', sanitizeInput, async (request, response) => {
 })
 
 itemRouter.delete('/:id', async (request, response) => {
-  const instanceCheck = await ItemInstance.find({ item: request.params.id })
+  const instanceCheck = await ItemInstance.find({
+    item: request.params.id,
+  }).exec()
   if (instanceCheck.length > 0) {
     return response.status(400).json({
       error: 'remove item instances before deletion',
