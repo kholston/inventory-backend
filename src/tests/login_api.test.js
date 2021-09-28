@@ -1,4 +1,3 @@
-import dotenv from 'dotenv'
 import supertest from 'supertest'
 import bcrypt from 'bcrypt'
 import mongoose from 'mongoose'
@@ -7,7 +6,6 @@ import User from '../models/user'
 import helper from './test_helper'
 import app from '../app'
 
-dotenv.config()
 const api = supertest(app)
 
 beforeEach(async () => {
