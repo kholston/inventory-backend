@@ -4,6 +4,7 @@ import app from '../app'
 import Manufacturer from '../models/manufacturer'
 import Category from '../models/category'
 import Item from '../models/item'
+import ItemInstance from '../models/itemInstance'
 import helper from './test_helper'
 import { describe } from '@jest/globals'
 
@@ -110,7 +111,24 @@ describe('Item', () => {
       const items = itemsAtEnd.map((i) => i.name)
       expect(items).not.toContain(itemToDelete.name)
     })
-    test.todo('fails with status code if item is still referenced')
+    test('fails with status code if item is still referenced', async () => {
+      const itemsAtStart = await helper.itemsInDb()
+      const itemToDelete = itemsAtStart[0]
+      const testInstance = await new ItemInstance({
+        item: itemToDelete.id,
+        serial_number: 'test serial',
+      }).save()
+
+      const response = await api
+        .delete(`/api/items/${itemToDelete.id}`)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      const body = response.body
+      expect(body.error).toBe('remove item instances before deletion')
+      const processedInstance = JSON.parse(JSON.stringify(testInstance))
+      expect(body.itemInstances[0]).toEqual(processedInstance)
+    })
   })
 })
 

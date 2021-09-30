@@ -104,7 +104,23 @@ describe('Manufacturer', () => {
       const manufacturers = manufacturersAtEnd.map((m) => m.name)
       expect(manufacturers).not.toContain(manufacturerToDelete.name)
     })
-    test.todo('fails with status code 400 if manufacturer is still in use')
+    test('fails with status code 400 if manufacturer is still in use', async () => {
+      const manufacturersAtStart = await helper.manufacturersInDb()
+      const manufactuterToDelete = manufacturersAtStart[0]
+      const testItem = await helper.testItem(null, manufactuterToDelete)
+
+      const response = await api
+        .delete(`/api/manufacturers/${manufactuterToDelete.id}`)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+      const body = response.body
+      expect(body.error).toBe('remove manufacturer from items before deletion')
+      const processedItem = JSON.parse(JSON.stringify(testItem))
+      expect(body.items[0]).toEqual(processedItem)
+      const manufacturersAtEnd = await helper.manufacturersInDb()
+      expect(manufacturersAtEnd).toHaveLength(manufacturersAtStart.length)
+    })
   })
 })
 

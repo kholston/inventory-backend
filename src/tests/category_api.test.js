@@ -98,7 +98,20 @@ describe('Category', () => {
       expect(categories).not.toContain(categoryToDelete.name)
     })
 
-    test.todo('fails with status code 400 if category is still in use')
+    test('fails with status code 400 if category is still in use', async () => {
+      const categoriesAtStart = await helper.categoriesInDb()
+      const categoryToDelete = categoriesAtStart[0]
+      const testItem = await helper.testItem(categoryToDelete)
+
+      const response = await api
+        .delete(`/api/categories/${categoryToDelete.id}`)
+        .expect(400)
+
+      const body = response.body
+      expect(body.error).toBe('remove category from items before deletion')
+      const processedItem = JSON.parse(JSON.stringify(testItem))
+      expect(body.items[0]).toEqual(processedItem)
+    })
   })
 })
 

@@ -94,6 +94,33 @@ const initialItems = [
     number_in_stock: 1,
   },
 ]
+const testItem = async (category = null, manufacturer = null) => {
+  if (!category) {
+    const newCategory = await new Category({
+      name: 'test',
+      description: 'test',
+    }).save()
+
+    category = newCategory.toJSON()
+  }
+  if (!manufacturer) {
+    manufacturer = await new Manufacturer({
+      name: 'test',
+      description: 'test',
+    }).save()
+  }
+
+  const item = await new Item({
+    name: 'test',
+    description: 'test',
+    category: [category.id],
+    price: '0.00',
+    number_in_stock: 0,
+    manufacturer: manufacturer.id,
+  }).save()
+
+  return item.toJSON()
+}
 
 const initialItemsWithAllFields = (manufacturers, categories) => {
   const itemsWithAllFields = initialItems
@@ -209,6 +236,7 @@ const usersInDb = async () => {
 }
 
 export default {
+  testItem,
   initialItems,
   initialItemsWithAllFields,
   initialItemInstances,
