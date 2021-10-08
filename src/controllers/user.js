@@ -39,13 +39,11 @@ userRouter.post('/', sanitizeInput, async (request, response) => {
   }
 
   const input = request.body
-  const saltRounds = 10
-  const passwordHash = await bcrypt.hash(input.password, saltRounds)
 
   const user = new User({
     username: input.username,
     name: input.name,
-    passwordHash,
+    passwordHash: input.password,
   })
 
   const savedUser = await user.save()
