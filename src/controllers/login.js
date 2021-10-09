@@ -1,6 +1,5 @@
 import express from 'express'
 import { body, validationResult } from 'express-validator'
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import User from '../models/user'
 
@@ -29,9 +28,7 @@ loginRouter.post('/', sanitizeInput, async (request, response) => {
 
   const user = await User.findOne({ username: body.username }).exec()
   const passwordCorrect =
-    user === null
-      ? false
-      : await bcrypt.compare(body.password, user.passwordHash)
+    user === null ? false : user.isValidPassword(body.password)
 
   if (!(user && passwordCorrect)) {
     return response.status(401).json({

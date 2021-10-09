@@ -1,5 +1,4 @@
 import express from 'express'
-import bcrypt from 'bcrypt'
 import User from '../models/user'
 import { body, validationResult } from 'express-validator'
 

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
+import { async } from 'regenerator-runtime'
 
 const saltRounds = 10
 
@@ -28,5 +29,12 @@ UserSchema.pre('save', async function (next) {
   user.passwordHash = hash
   next()
 })
+
+UserSchema.methods.isValidPassword = async function (password) {
+  const user = this
+  const compare = await bcrypt.compare(password, user.passwordHash)
+
+  return compare
+}
 
 export default mongoose.model('User', UserSchema)
