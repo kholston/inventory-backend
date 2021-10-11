@@ -137,7 +137,7 @@ describe('User', () => {
       expect(usersAtEnd).toHaveLength(usersAtStart.length)
 
       const usernames = usersAtEnd.map((u) => u.username)
-      expect(usernames).not.toContain('in')
+      expect(usernames).not.toContain('invalidPassword')
     })
   })
 })
