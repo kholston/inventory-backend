@@ -118,7 +118,7 @@ describe('Passport Auth', () => {
       })
 
       test('signup fails with proper status code and message if password is invalid', async () => {
-        const usersAtStart = helper.usersInDb()
+        const usersAtStart = await helper.usersInDb()
 
         const newUser = {
           username: 'invalidPassword',

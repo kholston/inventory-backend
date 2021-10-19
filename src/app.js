@@ -7,6 +7,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import mongoose from 'mongoose'
+import passport from 'passport'
 import categoryRouter from './controllers/category'
 import manufacturerRouter from './controllers/manufacturer'
 import logger from './utils/logger'
@@ -15,6 +16,7 @@ import itemRouter from './controllers/item'
 import instanceRouter from './controllers/itemInstance'
 import userRouter from './controllers/user'
 import loginRouter from './controllers/login'
+import authRouter from './controllers/auth'
 
 const app = express()
 
@@ -33,6 +35,7 @@ mongoose
     logger.error('error connecting to MongoDB:', error.message)
   })
 
+app.use(passport.initialize())
 app.use(cors())
 app.use(helmet())
 app.use(express.json())
@@ -44,6 +47,7 @@ app.use('/api/items', itemRouter)
 app.use('/api/iteminstances', instanceRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
+app.use('/api/auth', authRouter)
 
 if (process.env.NODE_ENV === 'test') {
   import('./controllers/testing').then((testingRouter) => {
