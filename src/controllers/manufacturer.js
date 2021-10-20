@@ -51,7 +51,6 @@ manufacturerRouter.post('/', sanitizeInput, async (request, response) => {
   response.json(savedManufacturer)
 })
 manufacturerRouter.put('/:id', sanitizeInput, async (request, response) => {
-  sanitizeInput()
   const errors = validationResult(request)
   if (!errors.isEmpty()) {
     response.status(400).json(errors)
