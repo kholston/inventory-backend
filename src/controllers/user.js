@@ -26,10 +26,16 @@ userRouter.get('/', async (request, response) => {
   const users = await User.find({}).exec()
   response.json(users)
 })
+
 userRouter.get('/:id', async (request, response) => {
   const user = await User.findById(request.params.id).exec()
-  response.json(user)
+  if (user) {
+    response.json(user)
+  } else {
+    response.status(404).json({ error: 'user does not exist' })
+  }
 })
+
 userRouter.post('/', sanitizeInput, async (request, response) => {
   const errors = validationResult(request)
 
