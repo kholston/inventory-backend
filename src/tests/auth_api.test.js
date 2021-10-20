@@ -31,11 +31,14 @@ describe('Passport Auth', () => {
           password: 'basicPassword',
         }
 
-        await api
+        const response = await api
           .post('/api/auth/signup')
           .send(newUser)
           .expect(200)
           .expect('Content-Type', /application\/json/)
+
+        const result = response.body.message
+        expect(result).toContain('signup successful')
 
         const usersAtEnd = await helper.usersInDb()
         expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
@@ -93,7 +96,7 @@ describe('Passport Auth', () => {
         expect(usernames).not.toContain('in')
       })
 
-      test('signup fails with proper satus code and message if password is missing', async () => {
+      test('signup fails with proper status code and message if password is missing', async () => {
         const usersAtStart = await helper.usersInDb()
 
         const newUser = {
@@ -168,8 +171,54 @@ describe('Passport Auth', () => {
         })
       })
       describe('with invalid credentials', () => {
-        test.todo('login fails if username is missing')
-        test.todo('login fails if password is missing')
+        test('login fails if username is missing', async () => {
+          const login = { password: 'missingUsername' }
+
+          const response = await api
+            .post('/api/auth/login')
+            .send(login)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+          const error = response.body.errors[0].msg
+          expect(error).toEqual('`username` is required')
+        })
+        test('login fails if password is missing', async () => {
+          const login = { username: 'missingPassword' }
+
+          const response = await api
+            .post('/api/auth/login')
+            .send(login)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+          const error = response.body.errors[0].msg
+          expect(error).toEqual('password is required')
+        })
+        test('login fails if non-exisitng user', async () => {
+          const login = { username: 'johnDoe', password: 'password' }
+
+          const response = await api
+            .post('/api/auth/login')
+            .send(login)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+          const result = response.body.error
+          expect(result).toContain('user not found')
+        })
+        test('login fails id password is incorrect', async () => {
+          const login = { username: 'main', password: 'wrongPassword' }
+
+          const response = await api
+            .post('/api/auth/login')
+            .send(login)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+          const result = response.body.error
+          expect(result).toContain('incorrect password')
+        })
       })
     })
   })
