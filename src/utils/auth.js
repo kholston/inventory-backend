@@ -1,5 +1,6 @@
 import passport from 'passport'
 import { Strategy as localStrategy } from 'passport-local'
+import { Strategy as JWTstrategy, ExtractJwt } from 'passport-jwt'
 import { validationResult } from 'express-validator'
 import { async } from 'regenerator-runtime'
 import User from '../models/user'
@@ -45,18 +46,34 @@ passport.use(
       const user = await User.findOne({ username }).exec()
 
       if (!user) {
-        return done(null, false, { message: 'User not found' })
+        return done(null, false, { message: 'user not found' })
       }
 
       const validate = await user.isValidPassword(password)
 
       if (!validate) {
-        return done(null, false, { message: 'Wrong Password' })
+        return done(null, false, { message: 'incorrect password' })
       }
 
-      return done(null, user, { message: 'Logged In Succesfully' })
+      return done(null, user, { message: 'logged in succesfully' })
     } catch (error) {
       return done(error)
     }
   })
+)
+
+passport.use(
+  new JWTstrategy(
+    {
+      secretOrKey: process.env.SECRET,
+      jwtFromRequest: ExtractJwt.fromUrlQueryParameter('user_token'),
+    },
+    async (token, done) => {
+      try {
+        return done(null, token.user)
+      } catch (error) {
+        done(error)
+      }
+    }
+  )
 )
