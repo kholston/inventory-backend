@@ -55,7 +55,7 @@ passport.use(
         return done(null, false, { message: 'incorrect password' })
       }
 
-      return done(null, user, { message: 'logged in succesfully' })
+      return done(null, user, { message: 'logged in successfully' })
     } catch (error) {
       return done(error)
     }
