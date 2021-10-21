@@ -235,6 +235,30 @@ const usersInDb = async () => {
   return users.map((u) => u.toJSON())
 }
 
+const userData = [
+  {
+    username: 'main',
+    name: 'superuser',
+    passwordHash: 'password',
+    admin: true,
+  },
+  {
+    username: 'User1',
+    name: 'TestUser1',
+    passwordHash: 'password1',
+  },
+  {
+    username: 'User2',
+    name: 'TestUser2',
+    passwordHash: 'password2',
+  },
+  {
+    username: 'User3',
+    name: 'TestUser3',
+    passwordHash: 'password3',
+  },
+]
+
 export default {
   testItem,
   initialItems,
@@ -248,5 +272,6 @@ export default {
   itemInstancesInDb,
   manufacturersInDb,
   usersInDb,
+  userData,
   nonExistingId,
 }

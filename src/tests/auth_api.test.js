@@ -8,19 +8,12 @@ const api = supertest(app)
 
 beforeEach(async () => {
   await User.deleteMany({})
-
-  const user = new User({
-    username: 'main',
-    name: 'superuser',
-    passwordHash: 'password',
-    admin: true,
-  })
-
-  await user.save()
+  const users = helper.userData.map((u) => new User(u).save())
+  await Promise.all(users)
 })
 
 describe('Passport Auth', () => {
-  describe('with one user in the database', () => {
+  describe('with multiple users in the database', () => {
     describe('Signup', () => {
       test('signup succeeds with new user', async () => {
         const usersAtStart = await helper.usersInDb()
@@ -150,11 +143,13 @@ describe('Passport Auth', () => {
         test('login is successful', async () => {
           const login = { username: 'main', password: 'password' }
 
-          await api
+          const response = await api
             .post('/api/auth/login')
             .send(login)
             .expect(200)
             .expect('Content-Type', /application\/json/)
+
+          expect(response.body.message).toEqual('logged in successfully')
         })
 
         test('a token with user information is returned', async () => {
@@ -195,7 +190,7 @@ describe('Passport Auth', () => {
           const error = response.body.errors[0].msg
           expect(error).toEqual('password is required')
         })
-        test('login fails if non-exisitng user', async () => {
+        test('login fails if non-existing user', async () => {
           const login = { username: 'johnDoe', password: 'password' }
 
           const response = await api
