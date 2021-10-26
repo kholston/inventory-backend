@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=production npm run build && node ./build/index.js",
+    "start": "npm run build && node ./build/index.js",
     "start:test": "cross-env NODE_ENV=test npm run nodemon",
     "dev": "cross-env NODE_ENV=development npm run nodemon",
     "dev:debug": "cross-env NODE_ENV=development nodemon --exec npm run babel-node --inspect src/index.js",
