@@ -4,8 +4,15 @@
   "description": "",
   "private": true,
   "scripts": {
+    "start": "cross-env NODE_ENV=production npm run build && node ./build/index.js",
+    "start:test": "cross-env NODE_ENV=test npm run nodemon",
+    "dev": "cross-env NODE_ENV=development npm run nodemon",
+    "dev:debug": "cross-env NODE_ENV=development nodemon --exec npm run babel-node --inspect src/index.js",
+    "nodemon": "nodemon --exec npm run babel-node -- src/index.js",
     "babel-node": "babel-node --presets='@babel/preset-env'",
-    "dev": "cross-env NODE_ENV=development nodemon --exec npm run babel-node -- src/index.js",
+    "build": "npm run clean && npm run build:babel",
+    "build:babel":"babel src --out-dir build --ignore 'src/coverage, src/**/*.test.js'",
+    "clean":"rm -rf build && mkdir build",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
@@ -33,6 +40,7 @@
     "regenerator-runtime": "^0.13.9"
   },
   "devDependencies": {
+    "@babel/cli": "^7.15.7",
     "@babel/core": "^7.15.0",
     "@babel/node": "^7.14.9",
     "@babel/preset-env": "^7.15.0",
